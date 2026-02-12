@@ -20,6 +20,13 @@
  * 2. Run tests on actual hardware with feedback mechanisms
  * 3. Use simulation environments that support GPIO state verification
  * 
+ * TIMING NOTE: All delay() calls have been replaced with while loops using 
+ * millis() as requested. Note that in test contexts, these busy-wait loops
+ * consume more CPU than delay() would. For production test code, consider:
+ * - Using delay() in tests (it yields to scheduler)
+ * - Restructuring tests to not require waiting
+ * - Using task-based testing with proper synchronization
+ * 
  * For real testing of this LED blinking program, refer to TESTING.md for
  * manual testing procedures which are more appropriate for this use case.
  */
@@ -80,7 +87,7 @@ void test_digital_write_low(void) {
 // NOTE: This validates the toggle sequence logic without hardware verification.
 void test_led_toggle(void) {
     pinMode(TEST_LED_PIN, OUTPUT);
-    unsigned long startTime, currentTime;
+    unsigned long startTime;
     
     // Turn LED on
     digitalWrite(TEST_LED_PIN, HIGH);
