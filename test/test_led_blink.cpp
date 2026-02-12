@@ -7,8 +7,21 @@
  * To run tests:
  * pio test -e esp32dev
  * 
- * Note: These tests are examples of how automated testing could be implemented.
- * Some tests may require hardware or simulation environment.
+ * IMPORTANT NOTE: These tests are example templates showing how automated 
+ * testing could be implemented for embedded systems. Due to the nature of 
+ * embedded hardware testing, actual verification of GPIO states requires:
+ * - Physical hardware with the ability to read GPIO states
+ * - Hardware-in-the-loop (HIL) testing setup
+ * - Simulation environment (e.g., Wokwi, QEMU)
+ * 
+ * The tests below are simplified examples that pass unconditionally. In a 
+ * production environment, you would either:
+ * 1. Use mock objects to simulate hardware behavior
+ * 2. Run tests on actual hardware with feedback mechanisms
+ * 3. Use simulation environments that support GPIO state verification
+ * 
+ * For real testing of this LED blinking program, refer to TESTING.md for
+ * manual testing procedures which are more appropriate for this use case.
  */
 
 #include <Arduino.h>
@@ -28,35 +41,43 @@ void tearDown(void) {
 }
 
 // Test 1: Verify LED pin configuration
+// NOTE: This is a template test. In a real scenario, you would need
+// hardware support or mocking to verify pin configuration state.
 void test_led_pin_configuration(void) {
     pinMode(TEST_LED_PIN, OUTPUT);
     
-    // In a real test, we might read back the pin configuration
-    // This is a simplified example
-    TEST_ASSERT_TRUE(true); // Pin configuration successful
+    // In a production test with hardware/simulation support:
+    // - Use GPIO register reading to verify pin mode
+    // - Or use mock objects to capture pinMode calls
+    // For now, this validates that pinMode() executes without error
+    TEST_PASS(); // Test passes if pinMode doesn't crash
 }
 
 // Test 2: Verify digital write HIGH
+// NOTE: This is a template test. In production, you would verify actual GPIO state.
 void test_digital_write_high(void) {
     pinMode(TEST_LED_PIN, OUTPUT);
     digitalWrite(TEST_LED_PIN, HIGH);
     
-    // In a real hardware test, you would verify the pin state
-    // For simulation/mock: TEST_ASSERT_EQUAL(HIGH, digitalRead(TEST_LED_PIN));
-    TEST_ASSERT_TRUE(true); // Simplified for this example
+    // In a production test with hardware/simulation:
+    // TEST_ASSERT_EQUAL(HIGH, digitalRead(TEST_LED_PIN));
+    // Or use logic analyzer / oscilloscope data
+    TEST_PASS(); // Test passes if digitalWrite doesn't crash
 }
 
 // Test 3: Verify digital write LOW
+// NOTE: This is a template test. In production, you would verify actual GPIO state.
 void test_digital_write_low(void) {
     pinMode(TEST_LED_PIN, OUTPUT);
     digitalWrite(TEST_LED_PIN, LOW);
     
-    // In a real hardware test, you would verify the pin state
-    // For simulation/mock: TEST_ASSERT_EQUAL(LOW, digitalRead(TEST_LED_PIN));
-    TEST_ASSERT_TRUE(true); // Simplified for this example
+    // In a production test with hardware/simulation:
+    // TEST_ASSERT_EQUAL(LOW, digitalRead(TEST_LED_PIN));
+    TEST_PASS(); // Test passes if digitalWrite doesn't crash
 }
 
 // Test 4: Verify LED toggle functionality
+// NOTE: This validates the toggle sequence logic without hardware verification.
 void test_led_toggle(void) {
     pinMode(TEST_LED_PIN, OUTPUT);
     
@@ -71,7 +92,8 @@ void test_led_toggle(void) {
     // Turn LED on again
     digitalWrite(TEST_LED_PIN, HIGH);
     
-    TEST_ASSERT_TRUE(true); // Toggle sequence completed
+    // In production: verify state changes with hardware feedback or mock
+    TEST_PASS(); // Toggle sequence completed without errors
 }
 
 // Test 5: Verify timing accuracy (simplified)
@@ -94,6 +116,7 @@ void test_serial_init(void) {
 }
 
 // Test 7: Multiple blink cycles
+// NOTE: This validates that multiple cycles execute without errors.
 void test_multiple_blink_cycles(void) {
     pinMode(TEST_LED_PIN, OUTPUT);
     
@@ -105,7 +128,8 @@ void test_multiple_blink_cycles(void) {
         delay(100);
     }
     
-    TEST_ASSERT_TRUE(true); // Multiple cycles completed
+    // In production: use hardware feedback to count actual state changes
+    TEST_PASS(); // Multiple cycles completed without errors
 }
 
 void setup() {
