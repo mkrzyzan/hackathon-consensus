@@ -80,14 +80,17 @@ void test_digital_write_low(void) {
 // NOTE: This validates the toggle sequence logic without hardware verification.
 void test_led_toggle(void) {
     pinMode(TEST_LED_PIN, OUTPUT);
+    unsigned long startTime, currentTime;
     
     // Turn LED on
     digitalWrite(TEST_LED_PIN, HIGH);
-    delay(100);
+    startTime = millis();
+    while(millis() - startTime < 100) { /* non-blocking wait */ }
     
     // Turn LED off
     digitalWrite(TEST_LED_PIN, LOW);
-    delay(100);
+    startTime = millis();
+    while(millis() - startTime < 100) { /* non-blocking wait */ }
     
     // Turn LED on again
     digitalWrite(TEST_LED_PIN, HIGH);
@@ -99,7 +102,11 @@ void test_led_toggle(void) {
 // Test 5: Verify timing accuracy (simplified)
 void test_timing_basic(void) {
     unsigned long startTime = millis();
-    delay(1000); // Simulate BLINK_INTERVAL
+    unsigned long targetTime = 1000; // Simulate BLINK_INTERVAL
+    
+    // Non-blocking wait
+    while(millis() - startTime < targetTime) { /* wait */ }
+    
     unsigned long elapsed = millis() - startTime;
     
     // Check if delay is approximately 1000ms (with tolerance)
@@ -109,7 +116,10 @@ void test_timing_basic(void) {
 // Test 6: Verify serial initialization
 void test_serial_init(void) {
     Serial.begin(115200);
-    delay(100); // Give serial time to initialize
+    
+    // Non-blocking wait for serial initialization
+    unsigned long startTime = millis();
+    while(millis() - startTime < 100) { /* wait */ }
     
     // Verify serial is available
     TEST_ASSERT_TRUE(Serial);
@@ -119,13 +129,17 @@ void test_serial_init(void) {
 // NOTE: This validates that multiple cycles execute without errors.
 void test_multiple_blink_cycles(void) {
     pinMode(TEST_LED_PIN, OUTPUT);
+    unsigned long startTime;
     
     // Perform multiple blink cycles
     for(int i = 0; i < 3; i++) {
         digitalWrite(TEST_LED_PIN, HIGH);
-        delay(100); // Shortened for faster testing
+        startTime = millis();
+        while(millis() - startTime < 100) { /* non-blocking wait */ }
+        
         digitalWrite(TEST_LED_PIN, LOW);
-        delay(100);
+        startTime = millis();
+        while(millis() - startTime < 100) { /* non-blocking wait */ }
     }
     
     // In production: use hardware feedback to count actual state changes
@@ -133,8 +147,9 @@ void test_multiple_blink_cycles(void) {
 }
 
 void setup() {
-    // Wait for serial connection (optional, useful for debugging tests)
-    delay(2000);
+    // Non-blocking wait for serial connection (optional, useful for debugging tests)
+    unsigned long startTime = millis();
+    while(millis() - startTime < 2000) { /* wait */ }
     
     UNITY_BEGIN();
     

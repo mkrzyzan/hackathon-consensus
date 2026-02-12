@@ -22,6 +22,10 @@
 // Blink interval in milliseconds
 #define BLINK_INTERVAL 1000
 
+// Variables for non-blocking timing
+unsigned long previousMillis = 0;
+bool ledState = LOW;
+
 void setup() {
   // Initialize serial communication for debugging
   Serial.begin(115200);
@@ -36,13 +40,22 @@ void setup() {
 }
 
 void loop() {
-  // Turn LED on
-  digitalWrite(LED_PIN, HIGH);
-  Serial.println("LED ON");
-  delay(BLINK_INTERVAL);
+  // Non-blocking LED blink using millis()
+  unsigned long currentMillis = millis();
   
-  // Turn LED off
-  digitalWrite(LED_PIN, LOW);
-  Serial.println("LED OFF");
-  delay(BLINK_INTERVAL);
+  if (currentMillis - previousMillis >= BLINK_INTERVAL) {
+    // Save the last time LED was toggled
+    previousMillis = currentMillis;
+    
+    // Toggle LED state
+    ledState = !ledState;
+    digitalWrite(LED_PIN, ledState);
+    
+    // Print LED state
+    if (ledState == HIGH) {
+      Serial.println("LED ON");
+    } else {
+      Serial.println("LED OFF");
+    }
+  }
 }
